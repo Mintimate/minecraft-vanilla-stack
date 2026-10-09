@@ -1,7 +1,7 @@
 # Minecraft Vanilla Stack
 
 <p align="center">
-  <img src="assets/mascot/hello.png" width="240" alt="吉祥物橙芽" />
+  <img src="assets/mascot/hello.png" width="240" alt="橙芽灿烂笑着挥手欢迎" />
 </p>
 
 「橙芽」陪你搭起自己的原版世界。
@@ -20,7 +20,7 @@
 ## Docker 快速开服
 
 <p align="center">
-  <img src="assets/mascot/server.png" width="144" alt="橙芽：服务端开服" />
+  <img src="assets/mascot/server.png" width="144" alt="橙芽眨眼得意地微笑，按下服务器电源并竖起拇指" />
 </p>
 
 安装 Docker 与 Compose，克隆仓库后：
@@ -43,7 +43,7 @@ docker compose logs -f minecraft
 ## 玩家客户端
 
 <p align="center">
-  <img src="assets/mascot/client.png" width="144" alt="橙芽：玩家客户端" />
+  <img src="assets/mascot/client.png" width="144" alt="橙芽拿着地图和下载包，张圆嘴露出惊喜期待的表情" />
 </p>
 
 Windows、macOS 与 Linux 使用同一份 HMCL `.mrpack`，其中已包含模组。下载与服主相同的预设和版本，拖入 HMCL 创建独立实例。安装包不含 Java、Minecraft 本体或账号，首次安装仍需联网。
@@ -53,7 +53,7 @@ Windows、macOS 与 Linux 使用同一份 HMCL `.mrpack`，其中已包含模组
 ## 修改 YAML 与本地构建
 
 <p align="center">
-  <img src="assets/mascot/config.png" width="144" alt="橙芽：YAML 配置" />
+  <img src="assets/mascot/config.png" width="144" alt="橙芽拿着铅笔，微噘嘴认真思考清单上的配置" />
 </p>
 
 需要 Python 3.10+ 和 `requirements.txt` 中的依赖：
@@ -74,7 +74,7 @@ python3 tools/build.py build --pack vanilla-plus
 ## 可选 Makers 网页管理
 
 <p align="center">
-  <img src="assets/mascot/admin.png" width="144" alt="橙芽：网页管理" />
+  <img src="assets/mascot/admin.png" width="144" alt="橙芽操作笔记本电脑并竖起拇指，闭眼安心微笑" />
 </p>
 
 `web/` 独立部署到 EdgeOne Makers，保留白名单、玩家管理、难度、规则、天气时间、救援、封禁、结构定位、状态缓存及可选官方认证代理。游戏 Docker 镜像不包含网站或云函数，默认关闭 RCON。
