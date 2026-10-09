@@ -1,0 +1,20 @@
+# MVS proximity voice chat. Stop the server before editing, then restart.
+# Plasmo Voice 2.1.17 fills in its remaining defaults on startup.
+[host]
+ip = "0.0.0.0"
+# UDP, independent of the Minecraft TCP port; open/forward it externally too.
+port = 24454
+
+# If public UDP uses a different host/port, uncomment and set the reachable endpoint.
+# [host.public]
+# ip = "voice.example.com"
+# port = 30000
+
+[voice]
+# Players without the client mod can still join, but cannot participate in voice.
+client_mod_required = false
+max_extra_audio_broadcast_distance = 0
+
+[voice.proximity]
+distances = [8, 16, 32, 48]
+default_distance = 48

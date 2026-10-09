@@ -1,0 +1,13 @@
+{
+  "name": "minecraft-vanilla-stack-web",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "@edgeone/pages-blob": "0.0.14",
+    "undici": "6.29.0"
+  },
+  "type": "module"
+}

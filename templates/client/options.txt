@@ -1,0 +1,2 @@
+version:5023
+key_gui.xaero_open_map:key.keyboard.j

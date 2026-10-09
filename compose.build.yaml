@@ -1,0 +1,11 @@
+# Explicit development override; production compose.yaml never builds locally.
+services:
+  minecraft:
+    image: ${MC_BUILD_IMAGE:-minecraft-vanilla-stack-server:local}
+    pull_policy: build
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+      args:
+        PACK_ID: ${PACK_ID:-vanilla-plus}

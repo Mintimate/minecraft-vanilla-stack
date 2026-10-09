@@ -1,0 +1,50 @@
+{
+  "Features": {
+    "enable_sorting_and_moving": {
+      "value": true
+    },
+    "enable_auto_refill": {
+      "value": false
+    }
+  },
+  "ModSettings": {
+    "always_include_hotbar": false
+  },
+  "SortSettings": {
+    "sort_at_cursor": true,
+    "restock_hotbar": {
+      "value": false
+    }
+  },
+  "AutoRefillSettings": {
+    "refill_before_tool_break": {
+      "value": false
+    },
+    "refill_armor": {
+      "value": false
+    }
+  },
+  "GuiSettings": {
+    "inventory_overlay_buttons_visible": {
+      "value": true
+    },
+    "enable_inventory_buttons": {
+      "value": true
+    },
+    "show_regular_sort_button": {
+      "value": true
+    }
+  },
+  "Hotkeys": {
+    "sort_inventory": {
+      "main": {
+        "keys": "R",
+        "settings": {
+          "context": "GUI",
+          "activate_on": "PRESS",
+          "allow_extra_keys": false
+        }
+      }
+    }
+  }
+}

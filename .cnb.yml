@@ -1,0 +1,147 @@
+.environment: &environment
+  runner:
+    cpus: 4
+    tags: cnb:arch:amd64
+  docker:
+    build:
+      dockerfile: .ci/Dockerfile
+      by:
+        - .ci/Dockerfile
+        - requirements.txt
+  env:
+    PYTHONDONTWRITEBYTECODE: "1"
+    PYTHONUNBUFFERED: "1"
+
+.validate: &validate
+  name: validate-all-packs
+  <<: *environment
+  stages:
+    - name: 校验全部 YAML 配方
+      timeout: 3m
+      script: python3 tools/build.py validate
+    - name: 游戏构建与运行管理测试
+      timeout: 15m
+      script: python3 -m unittest discover -s tools -p 'test_*.py'
+    - name: 构建全部 HMCL 客户端与服务端
+      timeout: 30m
+      script: python3 tools/build.py build
+
+.web: &web
+  name: optional-makers-tests
+  runner:
+    cpus: 2
+  docker:
+    build:
+      dockerfile: .ci/web.Dockerfile
+      by: [.ci/web.Dockerfile]
+  ifModify: [web/**, tools/*.mjs, .ci/web.Dockerfile, .cnb.yml]
+  stages:
+    - name: Makers 与 RCON 测试
+      timeout: 10m
+      script: |
+        set -eu
+        npm ci --prefix web
+        node --test tools/test_*.mjs
+        python3 -m unittest discover -s web -p 'test_*.py'
+    - name: Makers 前端构建
+      timeout: 10m
+      script: |
+        set -eu
+        npm run build --prefix web
+
+.github-sync: &github-sync
+  name: sync-github-mirror
+  imports:
+    - https://cnb.cool/Mintimate/secret/-/blob/main/SyncToGitHub.yml
+  stages:
+    - name: 自动同步代码
+      image: tencentcom/git-sync
+      settings:
+        target_url: https://github.com/Mintimate/minecraft-vanilla-stack.git
+        auth_type: https
+        username: ${GIT_USERNAME}
+        password: ${GIT_ACCESS_TOKEN}
+        branch: main
+        force: true
+
+main:
+  push:
+    - *validate
+    - *web
+    - *github-sync
+
+"$":
+  pull_request:
+    - *validate
+    - *web
+  tag_push:
+    - name: release-all-packs
+      <<: *environment
+      services:
+        - docker
+      lock:
+        key: minecraft-stack-release
+        wait: true
+        expires: 14400
+        timeout: 14400
+        cancel-in-progress: false
+        cancel-in-wait: false
+      stages:
+        - name: 校验全部 YAML 配方
+          if: &release-tag |
+            python3 -c 'import os,re,sys; sys.exit(not re.fullmatch(r"v[0-9]+\.[0-9]+\.[0-9]+", os.environ["CNB_BRANCH"]))'
+          timeout: 3m
+          script: python3 tools/build.py validate
+        - name: 游戏构建与运行管理测试
+          if: *release-tag
+          timeout: 15m
+          script: python3 -m unittest discover -s tools -p 'test_*.py'
+        - name: 构建全部 HMCL 客户端与服务端
+          if: *release-tag
+          timeout: 30m
+          script: python3 tools/build.py build
+        - name: 登录同仓库 CNB 镜像制品库
+          if: *release-tag
+          timeout: 3m
+          script: |
+            set -eu
+            test "$CNB_DOCKER_REGISTRY" = docker.cnb.cool
+            printf '%s' "$CNB_TOKEN" | docker login "$CNB_DOCKER_REGISTRY" --username "$CNB_TOKEN_USER_NAME" --password-stdin
+        - name: 构建双架构版本镜像并准备附件
+          if: *release-tag
+          timeout: 90m
+          script: sh .ci/publish.sh build
+        - name: 创建预发布 Release
+          if: *release-tag
+          type: git:release
+          options:
+            tag: ${CNB_BRANCH}
+            title: ${CNB_BRANCH}
+            descriptionFromFile: .release/notes.md
+            overlying: true
+            preRelease: true
+            latest: false
+        - name: 上传全部发行附件
+          if: *release-tag
+          timeout: 15m
+          image: cnbcool/attachments:latest
+          settings:
+            type: UPLOAD
+            tag: ${CNB_BRANCH}
+            ttl: 0
+            attachments:
+              - .release/assets/*
+        - name: 公开为正式最新 Release
+          if: *release-tag
+          type: git:release
+          options:
+            tag: ${CNB_BRANCH}
+            title: ${CNB_BRANCH}
+            descriptionFromFile: .release/notes.md
+            overlying: true
+            preRelease: false
+            latest: true
+        - name: 将已验证镜像摘要推广到 latest
+          if: *release-tag
+          timeout: 10m
+          script: sh .ci/publish.sh promote

@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: CNB 主仓库问题与贡献
+    url: https://cnb.cool/Mintimate/tool-forge/minecraft-vanilla-stack
+    about: 请在 CNB 主仓库提交 Issue 或 Pull Request；GitHub 仅作为代码镜像。

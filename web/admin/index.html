@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="noindex, nofollow">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data: https://minotar.net; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <title>服务器管理 · Minecraft Vanilla Stack</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/admin/styles.css">
+  <script src="/admin/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳转到主要内容</a>
+  <div class="page-shell">
+    <header class="page-header">
+      <a class="brand" href="/" aria-label="Minecraft Vanilla Stack 首页"><img class="brand-mark" src="/assets/icon.svg" width="36" height="36" alt=""><div><strong>Minecraft Vanilla Stack</strong><span class="brand-caption">服务器管理</span></div></a>
+      <div id="account" class="account" hidden><span id="admin-name">管理员</span><button id="logout" class="button button-subtle" type="button">退出登录</button></div>
+    </header>
+    <main id="main">
+      <p id="initial-loading" class="loading-text" role="status">正在检查登录状态…</p>
+      <section id="login-panel" class="panel login-panel" aria-labelledby="login-heading" hidden>
+        <span class="section-label">管理员入口</span><h1 id="login-heading">使用管理密钥登录</h1>
+        <p class="muted">请输入服务器管理员配置的管理密钥。登录后 24 小时内有效，到期后需重新登录。</p>
+        <form id="login-form">
+          <label for="admin-key">管理密钥</label>
+          <input id="admin-key" name="key" type="password" autocomplete="current-password" required aria-describedby="key-note" placeholder="输入管理密钥">
+          <p id="key-note" class="field-note">密钥仅用于登录，页面不会将其保存到浏览器存储中。</p>
+          <p id="login-message" class="message" role="alert" hidden></p>
+          <button id="login-button" class="button button-primary" type="submit">登录管理后台</button>
+        </form>
+      </section>
+      <section id="dashboard" aria-label="服务器管理面板" hidden>
+        <div class="dashboard-heading">
+          <div><h1>服务器管理</h1><p class="muted">查看玩家，管理白名单与世界。</p></div>
+          <button id="refresh" class="button button-subtle" type="button">刷新全部状态</button>
+        </div>
+        <div class="dashboard-toolbar">
+          <p id="connection" class="connection" data-state="unknown" role="status"><span class="connection-dot" aria-hidden="true"></span><span id="connection-text">尚未读取服务器</span></p>
+          <p class="update-summary"><span class="snapshot-label">非实时数据</span><span id="global-updated">尚未更新</span></p>
+        </div>
+        <div class="stats-grid">
+          <div class="panel stat"><span class="stat-label">在线玩家 / 上限</span><strong id="online-count">—</strong><span id="overview-updated" class="stat-note">尚未读取在线状态</span></div>
+          <div class="panel stat"><span class="stat-label">白名单人数</span><strong id="player-count">—</strong><span id="whitelist-updated" class="stat-note">尚未读取白名单</span></div>
+          <div class="panel stat"><span class="stat-label">主世界时间</span><strong id="world-time">—</strong><span id="world-time-note" class="stat-note">主世界昼夜周期 · 等待读取</span><span id="world-updated" class="stat-note">尚未读取世界时间</span></div>
+        </div>
+        <p class="field-note status-explanation">打开页面、刷新或完成相关操作时更新，不会持续监控服务器。</p>
+        <div id="public-status-sync" class="message" role="status" aria-live="polite" hidden></div>
+        <div id="dashboard-message" class="message" role="status" aria-live="polite" hidden></div>
+        <div class="dashboard-tabs" role="tablist" aria-label="管理功能">
+          <button id="tab-daily" class="dashboard-tab" role="tab" type="button" aria-selected="true" aria-controls="daily-panel" tabindex="0">日常管理</button>
+          <button id="tab-locate" class="dashboard-tab" role="tab" type="button" aria-selected="false" aria-controls="locate-panel" tabindex="-1">结构定位</button>
+          <button id="tab-whitelist" class="dashboard-tab" role="tab" type="button" aria-selected="false" aria-controls="whitelist-panel" tabindex="-1">白名单</button>
+          <button id="tab-settings" class="dashboard-tab" role="tab" type="button" aria-selected="false" aria-controls="settings-panel" tabindex="-1">游戏设置</button>
+          <button id="tab-bans" class="dashboard-tab" role="tab" type="button" aria-selected="false" aria-controls="bans-panel" tabindex="-1">封禁管理</button>
+        </div>
+        <section id="daily-panel" class="tab-panel" role="tabpanel" aria-labelledby="tab-daily" tabindex="0">
+          <div class="section-status"><p id="daily-status" class="field-note daily-status" role="status">尚未读取在线玩家与主世界时间</p><p id="last-action-at" class="field-note" hidden></p></div>
+          <div id="daily-message" class="message" role="status" aria-live="polite" hidden></div>
+          <section class="panel online-panel" aria-labelledby="online-heading">
+            <div class="list-heading"><div><h2 id="online-heading">在线玩家</h2><p class="field-note">查看位置或帮助玩家脱困；踢出仅断开当前连接。</p></div><button id="overview-refresh" class="button button-subtle" type="button">刷新在线与时间</button></div>
+            <ul id="online-players" class="online-list" aria-label="在线玩家列表"></ul>
+            <p id="online-empty" class="empty-state">读取服务器后显示在线玩家。</p>
+          </section>
+          <section id="player-detail-panel" class="panel control-card player-detail-panel" aria-labelledby="player-detail-heading" hidden>
+            <div class="settings-heading"><div><h2 id="player-detail-heading" tabindex="-1">玩家详情与救援</h2><p class="muted">选择另一名在线玩家作为救援目标，传送至其身边。</p></div><div class="detail-actions"><button id="player-detail-refresh" class="button button-subtle" type="button">刷新玩家状态</button><button id="player-detail-close" class="button button-subtle" type="button">收起</button></div></div>
+            <p id="player-detail-status" class="field-note" role="status">尚未读取玩家位置</p>
+            <div id="player-detail-message" class="message" role="status" aria-live="polite" hidden></div>
+            <dl class="player-details"><div><dt>玩家名</dt><dd id="player-detail-name">—</dd></div><div><dt>所在维度</dt><dd id="player-detail-dimension">—</dd></div><div><dt>坐标 X / Y / Z</dt><dd id="player-detail-position">—</dd></div></dl>
+            <form id="teleport-form" class="daily-form">
+              <label for="teleport-target">传送到哪位玩家身边</label><div class="setting-control"><select id="teleport-target" required disabled aria-describedby="teleport-note"><option value="">请选择另一名在线玩家</option></select><button id="teleport-button" class="button button-subtle" type="submit" disabled>确认救援</button></div>
+              <p id="teleport-note" class="field-note">请先与目标玩家确认附近安全；传送可能跨维度。玩家移动后，显示的位置不会自动更新。</p>
+            </form>
+          </section>
+          <div class="daily-grid">
+            <section class="panel control-card" aria-labelledby="announce-heading">
+              <h2 id="announce-heading">发送公告</h2><p class="muted">向当前在线玩家发送一条服务器消息。</p>
+              <form id="announce-form" class="daily-form">
+                <label for="announcement">公告内容</label><textarea id="announcement" rows="3" required disabled aria-describedby="announcement-note" placeholder="例如：十分钟后维护，请提前返回安全位置。"></textarea>
+                <p id="announcement-note" class="field-note">单行文字，最多 160 个字符、512 字节。提交成功表示服务器接受请求，不代表每位玩家已收到。</p>
+                <button id="announce-button" class="button button-primary" type="submit" disabled>发送公告</button>
+              </form>
+            </section>
+            <section class="panel control-card" aria-labelledby="time-heading">
+              <h2 id="time-heading">调整时间</h2><p class="muted">设置主世界时间，影响在线玩家的昼夜体验。</p>
+              <form id="time-form" class="daily-form">
+                <label for="time-value">目标时间</label><select id="time-value" required disabled><option value="day">白天 · 1000 ticks</option><option value="noon">正午 · 6000 ticks</option><option value="night">夜晚 · 13000 ticks</option><option value="midnight">午夜 · 18000 ticks</option></select>
+                <p class="field-note">这里只调整时间，不改变昼夜循环规则。</p>
+                <button id="time-button" class="button button-subtle" type="submit" disabled>设置主世界时间</button>
+              </form>
+            </section>
+            <section class="panel control-card" aria-labelledby="weather-heading">
+              <h2 id="weather-heading">调整天气</h2><p class="muted">作用于主世界；雷暴可能产生闪电并影响玩家。</p>
+              <form id="weather-form" class="daily-form">
+                <div class="weather-inputs"><div><label for="weather-value">目标天气</label><select id="weather-value" required disabled><option value="clear">晴朗</option><option value="rain">下雨</option><option value="thunder">雷暴</option></select></div><div><label for="weather-seconds">持续时长</label><select id="weather-seconds" required disabled><option value="300">5 分钟</option><option value="600">10 分钟</option><option value="1200">20 分钟</option><option value="3600">60 分钟</option></select></div></div>
+                <p class="field-note">这里仅设置天气，不读取当前天气；选项是待提交值。</p>
+                <button id="weather-button" class="button button-subtle" type="submit" disabled>设置主世界天气</button>
+              </form>
+            </section>
+            <section class="panel control-card save-card" aria-labelledby="save-heading">
+              <h2 id="save-heading">保存世界</h2><p class="muted">将当前存档写入磁盘，可能短暂影响服务器响应。</p>
+              <p class="field-note">保存不会生成备份。若请求超时，请检查服务端日志确认结果，不要连续重复提交。</p>
+              <button id="save-world" class="button button-subtle" type="button" disabled>保存当前世界</button>
+            </section>
+          </div>
+        </section>
+        <section id="locate-panel" class="tab-panel" role="tabpanel" aria-labelledby="tab-locate" tabindex="0" hidden>
+          <div class="locate-grid">
+            <section class="panel control-card" aria-labelledby="locate-heading">
+              <span class="section-label">当前服务器世界</span><h2 id="locate-heading" class="locate-heading">寻找附近的结构</h2>
+              <p class="muted">选择你所在的维度，填写当前位置，查询附近的林地府邸、村庄等结构。主世界与下界可换算起点，无需输入世界种子。</p>
+              <form id="locate-form" class="daily-form">
+                <label for="locate-structure">想找什么</label>
+                <select id="locate-structure" required disabled aria-describedby="locate-dimension-note">
+                  <option value="mansion">林地府邸（林间小屋）</option><option value="swamp_hut">沼泽小屋</option><option value="village">村庄</option><option value="desert_pyramid">沙漠神殿</option><option value="jungle_pyramid">丛林神庙</option><option value="monument">海底神殿</option><option value="ancient_city">远古城市</option><option value="trial_chambers">试炼密室</option><option value="stronghold">末地传送门（要塞）</option><option value="fortress">下界要塞</option><option value="bastion_remnant">堡垒遗迹</option><option value="end_city">末地城</option>
+                </select>
+                <p id="locate-dimension-note" class="field-note">目标结构所在维度：主世界。</p>
+                <div class="locate-origin-dimension"><label for="locate-origin-dimension">你现在在哪个维度</label><select id="locate-origin-dimension" required disabled aria-describedby="locate-origin-note locate-conversion-note"><option value="minecraft:overworld">主世界</option><option value="minecraft:the_nether">下界</option><option value="minecraft:the_end">末地</option></select></div>
+                <div class="locate-origin-inputs">
+                  <div><label for="locate-x">出发坐标 X</label><input id="locate-x" type="number" min="-29999984" max="29999984" step="1" value="0" required disabled aria-describedby="locate-origin-note"></div>
+                  <div><label for="locate-z">出发坐标 Z</label><input id="locate-z" type="number" min="-29999984" max="29999984" step="1" value="0" required disabled aria-describedby="locate-origin-note"></div>
+                </div>
+                <p id="locate-origin-note" class="field-note">请填写所选维度中的坐标，可按 F3 查看；范围为 −29,999,984 至 29,999,984 的整数。</p>
+                <p id="locate-conversion-note" class="field-note locate-conversion-note" role="status" aria-live="polite">搜索起点：主世界 · X 0 / Z 0，使用填写的原坐标。</p>
+                <button id="locate-button" class="button button-primary" type="submit" disabled>查找最近的结构</button>
+                <p class="field-note">仅点击查询时搜索；每次查询后需间隔 30 秒。</p>
+              </form>
+            </section>
+            <section class="panel control-card locate-result-card" aria-labelledby="locate-result-heading">
+              <div class="settings-heading"><h2 id="locate-result-heading">查询结果</h2><span class="snapshot-label">按需查询</span></div>
+              <p id="locate-status" class="field-note" role="status">等待查询</p>
+              <div id="locate-message" class="message" role="status" aria-live="polite" hidden></div>
+              <div id="locate-empty" class="locate-empty"><strong>下一段冒险，从这里出发</strong><p class="muted">选择结构并开始查询后，这里会显示目标坐标、水平距离和方向。</p></div>
+              <div id="locate-result" hidden>
+                <p id="locate-result-name" class="locate-result-name"></p>
+                <p id="locate-result-origin" class="field-note"></p>
+                <p id="locate-result-search-origin" class="field-note locate-search-origin" hidden></p>
+                <dl class="locate-coordinates"><div><dt>X</dt><dd id="locate-result-x">—</dd></div><div id="locate-result-y-row" hidden><dt>Y</dt><dd id="locate-result-y">—</dd></div><div><dt>Z</dt><dd id="locate-result-z">—</dd></div></dl>
+                <dl class="locate-route"><div><dt>所在维度</dt><dd id="locate-result-dimension">—</dd></div><div><dt id="locate-result-distance-label">水平距离</dt><dd id="locate-result-distance">—</dd></div><div><dt id="locate-result-bearing-label">前进方向</dt><dd id="locate-result-bearing">—</dd></div></dl>
+                <p id="locate-height-note" class="field-note">服务器未提供高度，请到达目标附近后探索。</p>
+                <button id="locate-copy" class="button button-subtle" type="button" disabled>复制坐标</button>
+              </div>
+              <p class="field-note locate-direction-note">距离和方向以目标维度中的搜索起点为准：北为 −Z，东为 +X。主世界与下界按 8:1 换算起点，实际传送门出口可能不同；末地需使用末地坐标。</p>
+            </section>
+          </div>
+          <aside class="panel locate-help" aria-labelledby="locate-help-heading"><h2 id="locate-help-heading">想找下一个？换个出发坐标</h2><p class="muted">每次搜索都返回给定起点附近最近的结构，可能重复找到同一处。若想继续探索，请将起点移到更远的位置再查询。结果无法判断结构是否已被探索或破坏；未找到只代表本次搜索范围内没有结果。</p></aside>
+        </section>
+        <section id="whitelist-panel" class="tab-panel" role="tabpanel" aria-labelledby="tab-whitelist" tabindex="0" hidden>
+        <section class="panel add-panel" aria-labelledby="add-heading">
+          <div><h2 id="add-heading">添加玩家</h2><p class="muted">输入 Minecraft Java 版玩家名，提交后立即更新服务器白名单。</p></div>
+          <form id="add-form" class="add-form"><div class="input-group"><label for="player-name">玩家名</label><input id="player-name" name="name" type="text" minlength="1" maxlength="16" pattern="[A-Za-z0-9_]{1,16}" autocomplete="off" autocapitalize="none" spellcheck="false" required aria-describedby="name-note" placeholder="例如 Steve"><p id="name-note" class="field-note">1–16 位英文字母、数字或下划线。</p></div><button id="add-button" class="button button-primary" type="submit" disabled>添加到白名单</button></form>
+        </section>
+        <section class="panel list-panel" aria-labelledby="list-heading">
+          <div class="list-heading"><div><h2 id="list-heading">当前白名单</h2><p id="updated-at" class="field-note">尚未读取服务器数据</p></div><div class="search-group"><label for="search">搜索玩家名</label><input id="search" type="search" autocomplete="off" placeholder="搜索玩家名"></div></div>
+          <p id="list-summary" class="sr-only" aria-live="polite"></p>
+          <div class="table-scroll"><table><thead><tr><th scope="col">玩家名</th><th scope="col" class="action-heading">操作</th></tr></thead><tbody id="players"></tbody></table></div>
+          <p id="empty-state" class="empty-state">连接服务器后显示白名单。</p>
+        </section>
+        </section>
+        <section id="settings-panel" class="tab-panel" role="tabpanel" aria-labelledby="tab-settings" tabindex="0" hidden>
+        <section class="panel settings-panel" aria-labelledby="settings-heading">
+          <div class="settings-heading"><div><h2 id="settings-heading">游戏难度</h2><p class="muted">保存后立即生效，手动刷新可读取当前难度。</p></div><button id="settings-refresh" class="button button-subtle" type="button">刷新难度</button></div>
+          <p id="settings-status" class="field-note" role="status">尚未读取游戏难度</p>
+          <div id="settings-message" class="message" role="status" aria-live="polite" hidden></div>
+          <form id="setting-difficulty-form" class="setting-form">
+            <div class="setting-label"><label for="setting-difficulty">游戏难度</label><span id="current-difficulty" class="current-value">当前：—</span></div>
+            <p id="difficulty-note" class="field-note">修改会作用于当前世界，选择适合大家的冒险难度。</p>
+            <div class="setting-control"><select id="setting-difficulty" name="difficulty" required disabled aria-describedby="difficulty-note"><option value="peaceful">和平</option><option value="easy">简单</option><option value="normal">普通</option><option value="hard">困难</option></select><button id="save-difficulty" class="button button-subtle" type="submit" disabled>保存游戏难度</button></div>
+          </form>
+        </section>
+        <section class="panel settings-panel rules-panel" aria-labelledby="rules-heading">
+          <div class="settings-heading"><div><h2 id="rules-heading">常用游戏规则</h2><p class="muted">修改影响全服；每项单独保存，保存后读取服务器确认。</p></div><button id="rules-refresh" class="button button-subtle" type="button">刷新规则</button></div>
+          <p id="rules-status" class="field-note" role="status">尚未读取游戏规则</p>
+          <div id="rules-message" class="message" role="status" aria-live="polite" hidden></div>
+          <div id="game-rules" class="game-rules"></div>
+        </section>
+        </section>
+        <section id="bans-panel" class="tab-panel" role="tabpanel" aria-labelledby="tab-bans" tabindex="0" hidden>
+          <section class="panel add-panel" aria-labelledby="ban-heading">
+            <div class="settings-heading"><div><h2 id="ban-heading">封禁玩家</h2><p class="muted">封禁后玩家无法加入服务器，在线玩家也会被断开连接。</p></div><button id="bans-refresh" class="button button-subtle" type="button">刷新封禁名单</button></div>
+            <p id="bans-status" class="field-note" role="status">尚未读取封禁名单</p>
+            <div id="bans-message" class="message" role="status" aria-live="polite" hidden></div>
+            <form id="ban-form" class="ban-form">
+              <div><label for="ban-name">玩家名</label><input id="ban-name" type="text" minlength="1" maxlength="16" pattern="[A-Za-z0-9_]{1,16}" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="例如 Steve" required disabled aria-describedby="ban-name-note"><p id="ban-name-note" class="field-note">1–16 位英文字母、数字或下划线。</p></div>
+              <div><label for="ban-reason">封禁原因</label><input id="ban-reason" type="text" placeholder="例如：多次破坏其他玩家建筑" required disabled aria-describedby="ban-reason-note"><p id="ban-reason-note" class="field-note">必填，单行文字，不含 @，最多 160 个字符、512 字节；原因会告知被封禁玩家。</p></div>
+              <button id="ban-button" class="button button-danger" type="submit" disabled>封禁玩家</button>
+            </form>
+          </section>
+          <section class="panel control-card ban-list-panel" aria-labelledby="bans-heading">
+            <h2 id="bans-heading">当前封禁报告</h2><p id="bans-summary" class="field-note" aria-live="polite">尚未读取封禁名单</p>
+            <pre id="banned-players" class="ban-report" aria-label="服务器返回的封禁报告" hidden></pre>
+            <p id="bans-empty" class="field-note">读取服务器后显示封禁报告。</p>
+            <form id="unban-form" class="daily-form">
+              <label for="unban-name">需要解封的玩家名</label><div class="setting-control"><input id="unban-name" type="text" minlength="1" maxlength="16" pattern="[A-Za-z0-9_]{1,16}" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="输入完整玩家名" required disabled aria-describedby="unban-note"><button id="unban-button" class="button button-subtle" type="submit" disabled>解封玩家</button></div>
+              <p id="unban-note" class="field-note">输入报告中的完整玩家名。解封后仍需满足服务器的白名单等加入条件。</p>
+            </form>
+          </section>
+        </section>
+      </section>
+      <noscript><p class="message">请启用 JavaScript 后使用服务器管理。</p></noscript>
+    </main>
+    <dialog id="action-confirmation" class="action-dialog" aria-labelledby="confirmation-title" aria-describedby="confirmation-description">
+      <h2 id="confirmation-title">确认操作</h2>
+      <p id="confirmation-description" class="muted"></p>
+      <div class="confirmation-actions"><button id="confirmation-cancel" class="button button-subtle" type="button" autofocus>取消</button><button id="confirmation-submit" class="button button-danger" type="button">确认执行</button></div>
+    </dialog>
+    <footer class="page-footer">Minecraft Vanilla Stack <span aria-hidden="true">·</span> 管理操作通过 RCON 按需执行</footer>
+  </div>
+</body>
+</html>

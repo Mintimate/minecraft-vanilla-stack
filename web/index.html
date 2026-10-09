@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Minecraft Vanilla Stack：保留原版生存玩法，用 YAML 维护便利模组，快速构建客户端与服务端，开启自己的世界。">
+  <title>Minecraft Vanilla Stack · 开启自己的世界</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body id="top">
+  <a class="skip-link" href="#main">跳转到主要内容</a>
+  <header class="wrap header">
+    <a class="brand" href="#top"><img src="assets/icon.svg" width="38" height="38" alt=""><span>Minecraft<br><strong>Vanilla Stack</strong></span></a>
+    <nav aria-label="导航"><a href="#client">客户端</a><a href="#server">快速开服</a><a href="#makers">网页管理</a><a href="https://cnb.cool/Mintimate/tool-forge/minecraft-vanilla-stack" data-link="repo" target="_blank" rel="noopener noreferrer">CNB ↗</a></nav>
+  </header>
+  <main id="main">
+    <section class="wrap hero" aria-labelledby="hero-title">
+      <div class="hero-copy"><p class="eyebrow">BUILD YOUR OWN WORLD</p><h1 id="hero-title">原版的乐趣。<br><span>自己的世界。</span></h1><p class="lead">保留原版生存玩法，加入地图、投影、物品整理、语音与性能优化。用一份 YAML 维护内容，让客户端与服务端一起准备好。</p><div class="actions"><a class="button primary" href="https://cnb.cool/Mintimate/tool-forge/minecraft-vanilla-stack/-/releases" data-link="releases" target="_blank" rel="noopener noreferrer">下载整合包 ↓</a><a class="button secondary" href="#server">快速开服 →</a></div><p class="versions">Minecraft <b data-version="minecraft">26.3</b><span>·</span>Fabric <b data-version="fabric">0.19.5</b><span>·</span>Java <b data-version="java">25</b></p></div>
+      <aside class="hero-card" aria-label="整合包由 YAML 定义"><div class="card-top"><span class="dot"></span><span>packs / vanilla-plus.yaml</span><span>YAML</span></div><pre><code>id: vanilla-plus
+minecraft: &quot;26.3&quot;
+fabric_loader: &quot;0.19.5&quot;
+mods:
+  - id: sodium
+    filename: sodium-fabric-0.9.2+mc26.3.jar
+    url: https://cdn.modrinth.com/data/AANobbMI/versions/bAZQdGpg/sodium-fabric-0.9.2%2Bmc26.3.jar
+    # 完整 SHA-512 见源 YAML
+    sides: [client]</code></pre><div class="card-bottom"><span>YAML → 哈希校验 → 构建</span><span>客户端 + 服务端</span></div></aside>
+    </section>
+    <section class="wrap benefits" aria-label="项目特点"><article><span class="feature-icon">01</span><h2>原版增强</h2><p>便利模组融入熟悉的生存玩法，默认配置开箱可用。</p></article><article><span class="feature-icon">02</span><h2>内容可维护</h2><p>YAML 填写固定文件地址、SHA-512 和适用端，直接构建。</p></article><article><span class="feature-icon">03</span><h2>社区可复用</h2><p>Fork 仓库、调整清单，用 CNB 流水线发布自己的组合。</p></article></section>
+    <section class="wrap section" id="client" aria-labelledby="client-title">
+      <div class="section-heading"><div><p class="eyebrow">01 / PREPARE YOUR CLIENT</p><h2 id="client-title">客户端，几步就准备好。</h2><p>Windows、macOS 与 Linux 都能使用独立游戏实例。</p></div><a class="text-link" href="https://cnb.cool/Mintimate/tool-forge/minecraft-vanilla-stack/-/releases" data-link="releases" target="_blank" rel="noopener noreferrer">前往 CNB Releases ↗</a></div>
+      <div class="guide-grid"><ol class="steps"><li><h3>准备启动器与账号</h3><p>安装 HMCL，登录拥有 Minecraft Java 版游玩资格的 Microsoft 账号。<a href="https://hmcl.huangyuhui.net/download/" data-link="hmcl" target="_blank" rel="noopener noreferrer">下载 HMCL ↗</a></p></li><li><h3>下载与导入</h3><p>下载所选预设的 <code>client-hmcl</code> <code>.mrpack</code>，模组已内含。拖入 HMCL 创建独立实例，无需解压。</p></li><li><h3>检查 Java 与内存</h3><p>默认套包使用 Java <span data-version="java">25</span>，可先分配 4 GiB 内存。首次安装需要联网，安装包不含游戏本体、Java 或账号。</p></li><li><h3>添加自己的服务器</h3><p>由服主提供服务器地址，并将准确的 Java 玩家名添加到白名单。玩家名与登录邮箱不同。</p></li></ol><aside class="panel"><span class="tag">VANILLA PLUS</span><h3>便利功能，都在手边。</h3><dl class="shortcuts"><div><dt><kbd>J</kbd></dt><dd>世界地图</dd></div><div><dt><kbd>M</kbd></dt><dd>Litematica 投影；M + C 打开配置</dd></div><div><dt><kbd>R</kbd></dt><dd>背包与箱子整理</dd></div><div><dt><kbd>U / G</kbd></dt><dd>REI 用途与配方</dd></div><div><dt><kbd>V</kbd></dt><dd>Plasmo Voice 麦克风与输出设置</dd></div><div><dt><kbd>左 Alt</kbd></dt><dd>按住说话；Mac 使用左 Option</dd></div></dl><p class="note">默认语音范围 48 格。键位以实例配置为准，升级前备份个人设置。</p><p><a class="text-link" href="https://cnb.cool/Mintimate/tool-forge/minecraft-vanilla-stack/-/blob/main/docs/client-hmcl.md" data-doc="client-hmcl.md">完整安装指南 →</a></p></aside></div>
+    </section>
+    <section class="wrap section" id="server" aria-labelledby="server-title">
+      <div class="section-heading"><div><p class="eyebrow">02 / START YOUR SERVER</p><h2 id="server-title">给世界一个家。</h2><p>下载部署文件，配置环境，启动 Docker Compose。</p></div><a class="text-link" href="https://cnb.cool/Mintimate/tool-forge/minecraft-vanilla-stack/-/blob/main/docs/docker.md" data-doc="docker.md">Docker 部署指南 →</a></div>
+      <div class="guide-grid"><ol class="steps"><li><h3>取得部署文件</h3><p>从对应版本标签的源码取得 <code>compose.yaml</code>、<code>docker/.env.example</code> 和 <code>manage.sh</code>。Release 的 <code>Docker-images.txt</code> 提供每套包的镜像摘要。</p></li><li><h3>配置环境与 EULA</h3><p>复制环境文件为 <code>.env</code>，设置 <code>MC_IMAGE</code> 为所选包的镜像摘要，按主机资源调整内存。阅读并自行同意 <a href="https://www.minecraft.net/eula" data-link="eula" target="_blank" rel="noopener noreferrer">Minecraft EULA</a> 后，将 <code>EULA=false</code> 改为 <code>EULA=true</code>。</p></li><li><h3>启动与开放游戏端口</h3><p>等待日志出现 <code>Done</code>。在防火墙／安全组放行游戏 <code>25565/TCP</code>，使用语音时放行 <code>24454/UDP</code>。</p></li><li><h3>添加白名单与邀请朋友</h3><p>执行 <code>./manage.sh whitelist</code> 进入控制台，输入 <code>whitelist add PlayerName</code>。将地址与对应客户端发给朋友。</p></li></ol><aside class="terminal panel"><div class="card-top"><span class="dot"></span><span>仓库目录 / shell</span></div><pre><code id="server-code">cp docker/.env.example .env
+# 阅读 EULA，设置 MC_IMAGE 与内存
+chmod +x manage.sh
+docker compose pull
+docker compose up -d
+docker compose logs -f minecraft</code></pre><button class="copy-button" type="button" data-copy="server-code" aria-label="复制开服命令">复制</button><p class="note">Ctrl+C 退出日志跟踪，不会停服。命名卷保存世界与自动备份；定期执行 <code>./manage.sh backup</code> 创建停服备份。</p><p><a class="text-link" href="https://cnb.cool/Mintimate/tool-forge/minecraft-vanilla-stack/-/blob/main/docs/backups.md" data-doc="backups.md">备份与恢复 →</a></p></aside></div>
+    </section>
+    <section class="wrap section" id="makers" aria-labelledby="makers-title">
+      <div class="section-heading"><div><p class="eyebrow">OPTIONAL / MAKERS WEB ADMIN</p><h2 id="makers-title">在网页里管理世界。</h2><p>独立部署到 EdgeOne Makers，按需连接游戏服原生 RCON。</p></div><a class="text-link" href="https://cnb.cool/Mintimate/tool-forge/minecraft-vanilla-stack/-/blob/main/docs/web-admin.md" data-doc="web-admin.md">Makers 部署指南 →</a></div>
+      <div class="three-grid"><article class="panel"><span class="tag">ADMINISTRATION</span><h3>白名单与日常管理</h3><p>添加玩家、调整难度与规则、查看在线名单、发布公告、保存世界与帮助玩家脱困。</p><a class="text-link" href="admin/">打开管理后台 →</a></article><article class="panel"><span class="tag">EXPLORATION</span><h3>结构定位</h3><p>按当前位置寻找村庄、府邸、要塞等结构，自动换算主世界与下界坐标，无需公开世界种子。</p><a class="text-link" href="admin/#locate">寻找附近结构 →</a></article><article class="panel"><span class="tag">OPTIONAL SERVICES</span><h3>状态与认证代理</h3><p>可选公开玩家状态与共享缓存；可选转发官方认证服务，保留正版验证。配置方式见部署指南。</p><p class="note">Web 模块独立于游戏服 Docker 镜像。</p></article></div>
+    </section>
+    <section class="wrap section panel public-status" id="public-status" aria-labelledby="status-title" data-state="pending" hidden>
+      <div class="section-heading"><div><p class="eyebrow">YOUR SERVER</p><h2 id="status-title">世界里的近况。</h2><p id="public-status-message" role="status">正在获取服务器状态…</p></div><span class="status-badge" id="public-status-badge">查询中</span></div>
+      <p class="player-count"><strong id="public-status-count">—</strong> / <span id="public-status-capacity">—</span><span class="note">在线玩家</span></p>
+      <h3 id="public-status-players-label">世界里的冒险家</h3><ul class="player-list" id="public-status-players" aria-label="在线玩家" hidden></ul><p class="note" id="public-status-empty">玩家名单尚未获取。</p><p class="note">成功更新时间：<time id="public-status-updated">尚未更新</time></p>
+      <div class="status-history"><h3>最近一次在线</h3><ul class="player-list" id="public-status-history-players" aria-label="最近在线玩家" hidden></ul><p class="note" id="public-status-history-empty">暂无最近在线记录</p><p class="note" id="public-status-history-time" hidden>记录时间：<time id="public-status-history-updated">尚未更新</time></p></div>
+    </section>
+    <section class="wrap section" id="customize" aria-labelledby="customize-title"><div class="section-heading"><div><p class="eyebrow">03 / MAKE IT YOURS</p><h2 id="customize-title">让清单适合你的社区。</h2><p>从默认预设开始，也可以维护自己的客户端与服务端组合。</p></div><a class="button secondary" href="https://cnb.cool/Mintimate/tool-forge/minecraft-vanilla-stack" data-link="repo" target="_blank" rel="noopener noreferrer">在 CNB Fork →</a></div><div class="three-grid"><article><h3>维护 YAML</h3><p>在 <code>packs/</code> 维护模组完整文件地址、SHA-512 与客户端／服务端选择。</p></article><article><h3>验证并构建</h3><p>运行 <code>python3 tools/build.py validate</code> 与 <code>build</code>，确认下载文件哈希与所选端内容。</p></article><article><h3>自动发布</h3><p>CNB 流水线构建整合包、服务端 ZIP 和 Docker 镜像，附件与校验值一起发布。</p></article></div></section>
+  </main>
+  <footer class="wrap footer"><p>Minecraft Vanilla Stack <span>·</span> 原版生存，便利增强。</p><a href="https://cnb.cool/Mintimate/tool-forge/minecraft-vanilla-stack" data-link="repo" target="_blank" rel="noopener noreferrer">CNB 主仓库 ↗</a><a href="https://github.com/Mintimate/minecraft-vanilla-stack" data-link="mirror" target="_blank" rel="noopener noreferrer">GitHub 代码镜像 ↗</a></footer>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "basics": {
+    "keyBindings": {
+      "recipeKeybind": {
+        "keyCode": "key.keyboard.g",
+        "modifier": 0
+      },
+      "usageKeybind": {
+        "keyCode": "key.keyboard.u",
+        "modifier": 0
+      }
+    }
+  }
+}

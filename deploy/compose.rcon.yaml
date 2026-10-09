@@ -1,0 +1,10 @@
+# Native Minecraft RCON only; no web process is installed in the game image.
+# Pass both --env-file .env and --env-file deploy/rcon.env with this overlay.
+services:
+  minecraft:
+    environment:
+      MC_RCON_ENABLED: "true"
+      MC_RCON_PASSWORD: "${MC_RCON_PASSWORD:?Set a password in deploy/rcon.env}"
+      MC_RCON_PORT: "${MC_RCON_PORT:-25575}"
+    ports:
+      - "${MC_RCON_BIND_IP:-127.0.0.1}:${MC_RCON_HOST_PORT:-25575}:${MC_RCON_PORT:-25575}/tcp"

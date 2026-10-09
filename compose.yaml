@@ -1,0 +1,42 @@
+services:
+  minecraft:
+    # Follow latest; Release attachments replace this with their verified snapshot digest.
+    image: ${MC_IMAGE:-docker.cnb.cool/mintimate/tool-forge/minecraft-vanilla-stack/vanilla-plus:latest}
+    ports:
+      - "${MC_PORT:-25565}:25565/tcp"
+      - "24454:24454/udp"
+    environment:
+      EULA: "${EULA:-false}"
+      MC_MIN_MEMORY: "${MC_MIN_MEMORY:-1G}"
+      MC_MAX_MEMORY: "${MC_MAX_MEMORY:-4G}"
+      MC_SERVICE_PROXY_URL: "${MC_SERVICE_PROXY_URL:-}"
+      MC_RCON_ENABLED: "${MC_RCON_ENABLED:-false}"
+      MC_RCON_PASSWORD: "${MC_RCON_PASSWORD:-}"
+      MC_RCON_PORT: "${MC_RCON_PORT:-25575}"
+      ALLOW_MINECRAFT_VERSION_CHANGE: "${ALLOW_MINECRAFT_VERSION_CHANGE:-false}"
+    volumes:
+      - mc-data:/data
+      - mc-backups:/backups
+    mem_limit: ${MC_CONTAINER_MEMORY:-6g}
+    cpus: ${MC_CPUS:-4}
+    init: true
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    # Allow an active FastBack snapshot/cleanup to finish during shutdown.
+    stop_grace_period: 10m
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  mc-data:
+    name: ${MC_DATA_VOLUME:-minecraft-vanilla-stack-data}
+  mc-backups:
+    name: ${MC_BACKUP_VOLUME:-minecraft-vanilla-stack-backups}
