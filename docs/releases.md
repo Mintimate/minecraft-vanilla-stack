@@ -31,4 +31,4 @@ docker.cnb.cool/mintimate/tool-forge/minecraft-vanilla-stack/minimal:v0.1.0
 
 支持 `linux/amd64` 与 `linux/arm64`，每套包各有 `latest`。固定部署优先使用 `Docker-images.txt` 中的摘要。版本快照不覆盖；发布失败后检查流水线和制品，修复后使用新版本，不移动已发布标签。路径规范见 [CNB Docker 制品库文档](https://docs.cnb.cool/zh/artifact/docker.html)。
 
-`main` 推送由独立流水线使用现有共用密钥和官方 `tencentcom/git-sync` 插件同步到 GitHub，无需额外启用开关。GitHub main 使用 `force: true` 作为代码镜像；版本标签在 CNB 发包，不创建 GitHub Release。配置说明见 [CNB 同步说明](../.cnb/README.md)。
+`main` 推送由独立流水线使用现有共用密钥和官方 `tencentcom/git-sync` 插件同步到 GitHub，无需额外启用开关。GitHub main 使用 `force: true` 作为代码镜像；版本标签在 CNB 发包，不创建 GitHub Release。配置说明见 [CNB 同步说明](cnb.md)。
